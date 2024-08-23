@@ -5,13 +5,22 @@
   env.GREET = "devenv";
 
   # https://devenv.sh/packages/
-  packages = [ pkgs.git ];
+  packages = [
+    pkgs.git
+    pkgs.pyright
+    pkgs.ruff-lsp
+    pkgs.black
+  ];
 
   # https://devenv.sh/languages/
   languages.go.enable = true;
-  languages.python.enable = true;
-  languages.python.version = "3.11.3";
+  languages.python = {
+    enable = true;
+    version = "3.11.3";
 
+    venv.enable = true;
+    venv.requirements = ./requirements.txt;
+  };
 
   difftastic.enable = true;
 
@@ -38,7 +47,17 @@
   '';
 
   # https://devenv.sh/pre-commit-hooks/
-  # pre-commit.hooks.shellcheck.enable = true;
+
+  pre-commit.hooks = {
+    # lint shell scripts
+    shellcheck.enable = true;
+    # execute example shell from Markdown files
+    # mdsh.enable = true;
+    # format Python code
+    ruff.enable = true;
+    trim-trailing-whitespace.enable = true;
+
+  };
 
   # See full reference at https://devenv.sh/reference/options/
 }
